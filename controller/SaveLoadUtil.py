@@ -22,4 +22,4 @@ class SaveLoadUtil:
     @staticmethod
     def saveFile(fileName, lines):
         with open(SaveLoadUtil.getSavePath() + fileName, 'w', encoding="UTF-8") as f:
-            f.writelines(lines)
+            f.write("\n".join(lines))
