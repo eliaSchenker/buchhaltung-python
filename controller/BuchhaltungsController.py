@@ -6,6 +6,8 @@ from model.Buchung import Buchung
 
 
 class BuchhaltungsController:
+    buchungen = []
+
     @staticmethod
     def loadKonten():
         lines = SaveLoadUtil.loadFile("konten.txt")
@@ -22,4 +24,4 @@ class BuchhaltungsController:
         BuchhaltungsController.buchungen = []
         for i in lines:
             data = i.split("|")
-            BuchhaltungsController.buchungen.append(Buchung(data[0], data[1], time.strptime(data[2], "%d.%m.%y"), data[3], int(data[4])))
+            BuchhaltungsController.buchungen.append(Buchung(data[0], data[1], time.strptime(data[2], "%d.%m.%Y"), data[3], float(data[4])))
