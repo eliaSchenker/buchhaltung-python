@@ -21,6 +21,16 @@ class BuchhaltungsController:
             BuchhaltungsController.konten.append(Konto(data[0], aktivKonto))
 
     @staticmethod
+    def saveKonten():
+        lines = []
+        for i in BuchhaltungsController.konten:
+            kontenZeichen = 'P'
+            if i.aktivKonto:
+                kontenZeichen = 'A'
+            lines.append(i.kontenName + "|" + kontenZeichen)
+        SaveLoadUtil.saveFile("konten.txt", lines)
+
+    @staticmethod
     def loadBuchungen():
         lines = SaveLoadUtil.loadFile("buchungen.txt")
         BuchhaltungsController.buchungen = []
@@ -33,8 +43,33 @@ class BuchhaltungsController:
     def saveBuchungen():
         lines = []
         for i in BuchhaltungsController.buchungen:
-            lines.append(i.konto1 + "|" + i.konto2 + "|" + i.date.strftime("%d.%m.%Y") + "|" + i.beschreibung + "|" + str(i.betrag))
+            lines.append(
+                i.konto1 + "|" + i.konto2 + "|" + i.date.strftime("%d.%m.%Y") + "|" + i.beschreibung + "|" + str(
+                    i.betrag))
         SaveLoadUtil.saveFile("buchungen.txt", lines)
+
+    @staticmethod
+    def calculateSaldi():
+        for i in BuchhaltungsController.konten:
+            i.saldo = 0
+        for i in BuchhaltungsController.buchungen:
+            for j in BuchhaltungsController.konten:
+                if j.kontenName == i.konto1:
+                    if j.aktivKonto:
+                        j.saldo += i.betrag
+                    else:
+                        j.saldo -= i.betrag
+                    break
+
+            for j in BuchhaltungsController.konten:
+                if j.kontenName == i.konto2:
+                    if j.aktivKonto:
+                        j.saldo -= i.betrag
+                    else:
+                        j.saldo += i.betrag
+                    break
+        for i in BuchhaltungsController.konten:
+            i.saldo = round(i.saldo * 100) / 100
 
     @staticmethod
     def addBuchung(buchung):
@@ -52,3 +87,13 @@ class BuchhaltungsController:
     def removeBuchung(index):
         BuchhaltungsController.buchungen.pop(index)
         BuchhaltungsController.saveBuchungen()
+
+    @staticmethod
+    def addKonto(konto):
+        BuchhaltungsController.konten.append(konto)
+        BuchhaltungsController.saveKonten()
+
+    @staticmethod
+    def removeKonto(index):
+        BuchhaltungsController.konten.pop(index)
+        BuchhaltungsController.saveKonten()

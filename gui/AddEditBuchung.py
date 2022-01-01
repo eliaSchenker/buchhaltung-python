@@ -19,6 +19,8 @@ class AddEditbuchung(QDialog):
         self.dateInput = QCalendarWidget()
         self.beschreibung = QLineEdit()
         self.betrag = QDoubleSpinBox()
+        self.betrag.setMinimum(0)
+        self.betrag.setMaximum(9999999999999)
         doneBtn = QPushButton()
         doneBtn.clicked.connect(self.doneBtnClick)
 
