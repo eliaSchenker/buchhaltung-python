@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QHBoxLayout, QWidget, QLabel, QListWidg
 from controller.BuchhaltungsController import BuchhaltungsController
 from gui.BuchenWindow import BuchenWindow
 from gui.KontenWindow import KontenWindow
+from gui.StatisticWindow import StatisticWindow
 
 
 class MainWindow(QMainWindow):
@@ -20,7 +21,7 @@ class MainWindow(QMainWindow):
         mainLayout.addWidget(openModeBtn)
 
         # Fill modes
-        self.modes = [["Buchen", BuchenWindow()], ["Konten", KontenWindow()]]
+        self.modes = [["Buchen", BuchenWindow()], ["Konten", KontenWindow()], ["Statistik", StatisticWindow()]]
         for i in self.modes:
             self.modeList.addItem(i[0])
 
