@@ -28,17 +28,28 @@ class StatisticWindow(QWidget):
         self.layout().addWidget(self.kontoSelection)
 
     def initializeKontoSelection(self):
+        """
+        Initializes the konto selection list
+        """
         self.kontoSelection.clear()
         for i in BuchhaltungsController.konten:
             self.kontoSelection.addItem(i.kontenName)
 
     def updateStatistic(self):
+        """
+        Updates the chart which displays the development of a konto over time
+        """
+        #Get the selected kontos of the list
         selectedItems = [item.text() for item in self.kontoSelection.selectedItems()]
 
+        # Create a dictionary of konten where the key is the kontoName and the value is an array which in the first
+        # element has a boolean which tells if the konto is an Aktivkonto. The second element of the array is an arary
+        # which contains the saldo of the konto at different dates (for statistic drawing)
         kontenSaldi = {}
         for i in BuchhaltungsController.konten:
             kontenSaldi[i.kontenName] = [i.aktivKonto, [[0, None]]]
 
+        # Iterate through the reverse buchungen and add the temporary saldo to the array for each buchung
         for i in BuchhaltungsController.buchungen[::-1]:
             timestamp = datetime.timestamp(i.date)
             if i.konto1 in kontenSaldi.keys():
@@ -77,6 +88,7 @@ class StatisticWindow(QWidget):
                         data.append(j[0])
                         dates.append(j[1])
                     counter += 1
+                # Divide the color wheel into different color by the amount of kontos
                 color = colorsys.hsv_to_rgb(step * kontenCounter / 360, 1, 1)
                 self.chart.plot(dates, data, name=i, pen=pg.mkPen(color=(round(color[0] * 255),
                                                                          round(color[1] * 255),
@@ -85,6 +97,9 @@ class StatisticWindow(QWidget):
         self.chart.autoRange()
 
     def openMode(self):
+        """
+        Open the StatisticWindowMode
+        """
         self.initializeKontoSelection()
         self.updateStatistic()
         self.show()

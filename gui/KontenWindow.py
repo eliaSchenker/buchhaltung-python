@@ -32,6 +32,9 @@ class KontenWindow(QWidget):
         self.layout().addWidget(self.tableWidget)
 
     def refreshTable(self):
+        """
+        Refreshes the Table of the kontos
+        """
         if BuchhaltungsController.konten is not None:
             self.tableWidget.setRowCount(len(BuchhaltungsController.konten))
 
@@ -39,23 +42,35 @@ class KontenWindow(QWidget):
 
             BuchhaltungsController.calculateSaldi()
 
+            # Iterate through the konten and add the name and saldo to the table
             for i in range(len(BuchhaltungsController.konten)):
                 verticalLabels.append("")
                 self.tableWidget.setItem(i, 0, QTableWidgetItem(str(BuchhaltungsController.konten[i].kontenName)))
                 self.tableWidget.setItem(i, 1, QTableWidgetItem(str(BuchhaltungsController.konten[i].saldo)))
             self.tableWidget.setVerticalHeaderLabels(verticalLabels)
-            self.tableWidget.resizeColumnsToContents()
+            self.tableWidget.resizeColumnsToContents() # Adjust the column sizes to fit the text
 
     def addKonto(self):
+        """
+        Opens the AddKonto Window
+        """
         self.addEditWindow = AddEditKonto(self.addKontoCallback)
         self.addEditWindow.setModal(True)
         self.addEditWindow.show()
 
     def addKontoCallback(self):
+        """
+        Gets called when the user successfully added a konto in the popup
+        :return:
+        """
         BuchhaltungsController.addKonto(self.addEditWindow.getResult())
         self.refreshTable()
 
     def removeKonto(self):
+        """
+        Removes a konto from the list
+        """
+
         if self.tableWidget.currentRow() == -1:
             msg = QMessageBox()
             msg.setWindowTitle("Warnung")
@@ -73,5 +88,8 @@ class KontenWindow(QWidget):
                 self.refreshTable()
 
     def openMode(self):
+        """
+        Opens the KontenWindow mode
+        """
         self.refreshTable()
         self.show()

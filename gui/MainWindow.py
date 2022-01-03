@@ -32,5 +32,9 @@ class MainWindow(QMainWindow):
         self.show()
 
     def openCurrentMode(self):
+        """
+        Opens the in the menu selected mode
+        :return:
+        """
         if len(self.modeList.selectedIndexes()) == 1:
             self.modes[self.modeList.currentRow()][1].openMode()

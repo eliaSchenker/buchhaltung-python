@@ -52,15 +52,24 @@ class BuchenWindow(QWidget):
             self.tableWidget.resizeColumnsToContents()
 
     def addBuchung(self):
+        """
+        Opens the AddBuchung Popup
+        """
         self.addEditWindow = AddEditbuchung(self.addBuchungCallback)
         self.addEditWindow.setModal(True)
         self.addEditWindow.show()
 
     def addBuchungCallback(self):
+        """
+        Gets called when the user successfully added a Buchung in the popup
+        """
         BuchhaltungsController.addBuchung(self.addEditWindow.getResult())
         self.refreshTable()
 
     def editBuchung(self):
+        """
+        Opens the EditBuchung Popup
+        """
         if self.tableWidget.currentRow() == -1:
             msg = QMessageBox()
             msg.setWindowTitle("Warnung")
@@ -73,10 +82,16 @@ class BuchenWindow(QWidget):
             self.addEditWindow.show()
 
     def editBuchungCallback(self):
+        """
+        Gets called when the user successfully edited the Buchung in the popup
+        """
         BuchhaltungsController.editBuchung(self.tableWidget.currentRow(), self.addEditWindow.getResult())
         self.refreshTable()
 
     def removeBuchung(self):
+        """
+        Removes a Buchung
+        """
         if self.tableWidget.currentRow() == -1:
             msg = QMessageBox()
             msg.setWindowTitle("Warnung")
@@ -94,5 +109,8 @@ class BuchenWindow(QWidget):
                 self.refreshTable()
 
     def openMode(self):
+        """
+        Opens the BuchenWindow mode
+        """
         self.refreshTable()
         self.show()
